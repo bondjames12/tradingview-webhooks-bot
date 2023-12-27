@@ -36,6 +36,7 @@
       $(document).ready(function () {
         $('#data_order').DataTable({
           scrollX: true,
+          serverSide: true,  // Enable server-side processing
           order: [[ 0, 'desc' ]],
           ajax: '/orders/data',
           processing: true,

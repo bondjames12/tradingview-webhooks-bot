@@ -55,11 +55,33 @@ def get_orders():
 
 
 def get_orders_data():
-    """Get IBKR Orders for AJAX"""
-    # Specify only the columns you need
-    query = "SELECT uniquekey, timestamp, ticker, tv_price, action, ordertype, qty, lmtprice, auxprice, orderid, orderref, orderstatus, position, mrkvalue, avgfillprice, unrealizedpnl, realizedpnl FROM TBOTORDERS"
-    rows = query_db(query)
-    return {"data": rows}
+    """Get IBKR Orders for AJAX with server-side processing"""
+    draw = request.args.get("draw", type=int)
+    start = request.args.get("start", default=0, type=int)
+    length = request.args.get("length", default=10, type=int)
+
+    # Base query to get all data (Modify as needed)
+    base_query = "FROM TBOTORDERS"
+
+    # Total records in the table (Modify query as needed)
+    total_records = query_db(f"SELECT COUNT(*) {base_query}")[0]["COUNT(*)"]
+
+    # Modify this query to add any necessary filtering based on user input
+    filtered_query = base_query
+
+    # Total records after filtering (Modify query as needed)
+    records_filtered = query_db(f"SELECT COUNT(*) {filtered_query}")[0]["COUNT(*)"]
+
+    # Final query with ordering and pagination (Adjust column names and ordering as needed)
+    query = f"SELECT * {filtered_query} ORDER BY timestamp DESC LIMIT ? OFFSET ?"
+    rows = query_db(query, [length, start])
+
+    return {
+        "draw": draw,
+        "recordsTotal": total_records,
+        "recordsFiltered": records_filtered,
+        "data": rows,
+    }
 
 
 def get_alerts():
