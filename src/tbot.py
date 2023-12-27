@@ -56,7 +56,9 @@ def get_orders():
 
 def get_orders_data():
     """Get IBKR Orders for AJAX"""
-    rows = query_db("select * from TBOTORDERS")
+    # Specify only the columns you need
+    query = "SELECT uniquekey, timestamp, ticker, tv_price, action, ordertype, qty, lmtprice, auxprice, orderid, orderref, orderstatus, position, mrkvalue, avgfillprice, unrealizedpnl, realizedpnl FROM TBOTORDERS"
+    rows = query_db(query)
     return {"data": rows}
 
 
@@ -68,8 +70,23 @@ def get_alerts():
 
 
 def get_alerts_data():
-    """Get TradingView alerts for AJAX"""
-    rows = query_db("select * from TBOTALERTS")
+    """Get TradingView alerts for AJAX with only necessary columns"""
+    query = """
+    SELECT
+        tv_timestamp,
+        uniquekey,
+        ticker,
+        direction,
+        qty,
+        orderref,
+        alertstatus,
+        entrylimit,
+        entrystop,
+        exitlimit,
+        exitstop,
+        tv_price
+    FROM TBOTALERTS"""
+    rows = query_db(query)
     return {"data": rows}
 
 
@@ -101,29 +118,25 @@ def get_ngrok():
 
 
 def get_tbot_data():
-    """Get inner join between TBOTORDERS and TBOTALERTS to
-    track orders from WebHook alerts to Orders.
-    """
-    query = (
-        "SELECT "
-        "TBOTORDERS.timestamp, "
-        "TBOTORDERS.uniquekey, "
-        "TBOTALERTS.tv_timestamp, "
-        "TBOTALERTS.ticker, "
-        "TBOTALERTS.tv_price, "
-        "TBOTORDERS.avgprice, "
-        "TBOTALERTS.direction, "
-        "TBOTORDERS.action, "
-        "TBOTORDERS.ordertype, "
-        "TBOTORDERS.qty, "
-        "TBOTORDERS.position, "
-        "TBOTALERTS.orderref, "
-        "TBOTORDERS.orderstatus "
-        "FROM TBOTORDERS INNER JOIN TBOTALERTS "
-        "ON TBOTALERTS.orderref = TBOTORDERS.orderref "
-        "AND TBOTALERTS.uniquekey = TBOTORDERS.uniquekey "
-        "ORDER BY TBOTORDERS.uniquekey DESC "
-    )
+    """Get inner join between TBOTORDERS and TBOTALERTS with only necessary columns"""
+    query = """
+    SELECT
+        TBA.tv_timestamp,
+        TBO.uniquekey,
+        TBO.timestamp,
+        TBA.ticker,
+        TBA.tv_price,
+        TBO.avgprice,
+        TBA.direction,
+        TBO.action,
+        TBO.ordertype,
+        TBO.qty,
+        TBO.position,
+        TBO.orderref,
+        TBO.orderstatus
+    FROM TBOTORDERS AS TBO
+    INNER JOIN TBOTALERTS AS TBA ON TBA.orderref = TBO.orderref AND TBA.uniquekey = TBO.uniquekey
+    ORDER BY TBO.uniquekey DESC"""
     rows = query_db(query)
     return {"data": rows}
 
