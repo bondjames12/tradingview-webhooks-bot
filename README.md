@@ -31,7 +31,7 @@ This web application can read TradingView webhook alerts or IBKR contracts (orde
 ### A Role on Tradingboat
 In the image below, this web application is represented by the red box:
 
-![webapp-tvwb-flask](https://user-images.githubusercontent.com/1986788/226574676-68bc949f-c849-4d3f-a2b2-307bbe72d885.png)
+![image](https://github.com/bondjames12/tradingview-webhooks-bot/assets/492840/a10680a0-6258-4688-8db9-cdc8fa7b0d57)
 
 ### Installation
 
@@ -46,8 +46,8 @@ Additionally, this is a demo video showcasing the functionality of the web appli
 
 Web application demo
 
+https://github.com/bondjames12/tradingview-webhooks-bot/assets/492840/9831adca-60c5-422c-9ec8-f17fc384f15c
 
-https://user-images.githubusercontent.com/1986788/226587160-2a24a06d-6346-4f3a-bf37-437c2886fa47.mov
 
 
 ### Reference
