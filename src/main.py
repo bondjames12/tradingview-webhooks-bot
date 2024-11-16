@@ -111,6 +111,28 @@ def get_logs():
         logs = [LogEvent().from_line(log) for log in log_file.readlines()]
         return jsonify([log.as_json() for log in logs])
 
+@app.route('/tbot/log')
+def get_tbot_log():
+    """
+    Returns the contents of the TBOT log file
+    """
+    log_file = os.environ.get("TBOT_LOGFILE", "/tmp/tbot_log.txt")
+    
+    try:
+        if os.path.exists(log_file):
+            return send_file(
+                log_file,
+                mimetype='text/plain',
+                as_attachment=True,
+                download_name='tbot.log'
+            )
+        else:
+            logger.error(f"Log file not found at {log_file}")
+            return Response(f'Error accessing log file: {log_file}', status=500)
+            
+    except Exception as e:
+        logger.error(f"Error accessing log file: {e}")
+        return Response(f'Error accessing log file: {log_file}', status=500)
 
 @app.route("/event/active", methods=["POST"])
 def activate_event():
