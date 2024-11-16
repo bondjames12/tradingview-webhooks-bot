@@ -94,9 +94,9 @@ def get_tbot():
     )
 
 
-def get_ngrok():
-    """Get NGROK Address"""
-    addr = os.environ.get("TBOT_NGROK", "#")
+def get_webhookurl():
+    """Get webhook Address"""
+    addr = os.environ.get("TBOT_WEBHOOKURL", "#")
     return {"data": {"address": addr}}
 
 
