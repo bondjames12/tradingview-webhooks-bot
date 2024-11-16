@@ -116,7 +116,7 @@ def get_tbot_log():
     """
     Returns the contents of the TBOT log file
     """
-    log_file = os.environ.get("TBOT_LOGFILE", "/tmp/tbot_log.txt")
+    log_file = os.environ.get("TBOT_LOGFILE", "/home/tbot/tbot_log.txt")
     
     try:
         if os.path.exists(log_file):
